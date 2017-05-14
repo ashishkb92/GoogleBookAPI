@@ -53,7 +53,7 @@ class App extends React.Component{
               ...items
             ],
             loading :false,
-            pageNumber,
+            pageNumber
 
 
           })

@@ -1,5 +1,5 @@
 import React,{PropTypes} from 'react';
-import Item from './Item';
+
 import axios from 'axios';
 
 
