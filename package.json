@@ -1,5 +1,5 @@
 {
-  "name": "pluralsight-redux-starter",
+  "name": "API fetch",
   "version": "1.0.0",
   "description": "Starter kit for React and Redux Pluralsight course by Cory House",
   "scripts": {
@@ -11,7 +11,7 @@
     "test": "mocha --reporter progress tools/testSetup.js \"src/**/*.test.js\"",
     "test:watch": "npm run test -- --watch"
   },
-  "author": "Cory House",
+  "author": "Ashish",
   "license": "MIT",
   "dependencies": {
     "babel-polyfill": "6.8.0",
@@ -27,6 +27,7 @@
     "toastr": "2.1.2"
   },
   "devDependencies": {
+    "axios": "^0.16.1",
     "babel-cli": "6.8.0",
     "babel-core": "6.8.0",
     "babel-loader": "6.2.4",
@@ -60,6 +61,7 @@
     "redux-mock-store": "1.0.2",
     "rimraf": "2.5.2",
     "style-loader": "0.13.1",
+    "underscore": "^1.8.3",
     "url-loader": "0.5.7",
     "webpack": "1.13.0",
     "webpack-dev-middleware": "1.6.1",
