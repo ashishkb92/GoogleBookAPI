@@ -3,34 +3,30 @@ import {Link} from 'react-router';
 
 class Search extends React.Component {
 
-  handleSearch(){
+  handleSearch(e){
+    e.preventDefault();
     this.props.onSearch(this.refs.seachTerm.value);
+    debugger;
   }
 
-  handleSort(){
-    this.props.onSort();
-  }
+
 
   render(){
-    var searchPlaceHolder = `Search from ${this.props.initialCount} bundle(s)`
+    var searchPlaceHolder = `Which book will you like to search today ?`
     return(
-      <div className = "jumbotron" >
-          <div className="input-group">
-            <input className="form-control" ref ="seachTerm" placeholder={searchPlaceHolder} required onChange = {this.handleSearch.bind(this)} />
-                 <span className="input-group-btn">
-                      <button  className="btn btn-default">
-                        <i className="glyphicon glyphicon-search"></i>
-                      </button>
-                      <button  className="btn btn-default" onClick = {this.handleSort.bind(this)}>
-                        <i className="glyphicon glyphicon-sort"></i>
-                      </button>
-                      <button  className="btn btn-default">
-                        <i className="glyphicon glyphicon-arrow-down"></i>
-                      </button>
-                  </span>
-         </div>
+      <form onSubmit= {this.handleSearch.bind(this)}>
+        <div className = "jumbotron" >
+            <div className="input-group">
+              <input className="form-control" ref ="seachTerm" placeholder={searchPlaceHolder} required  />
+              <span className="input-group-btn">
+                <button  type = "submit" className="btn btn-default">
+                  <i className="glyphicon glyphicon-search"></i>
+                </button>
+              </span>
+           </div>
 
-      </div>
+        </div>
+      </form>
     );
   }
 }

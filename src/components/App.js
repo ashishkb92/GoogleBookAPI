@@ -1,8 +1,8 @@
 import React,{PropTypes} from 'react';
 import Search from './home/Search';
 import axios from 'axios';
-import * as ItemAPI from '../api/ItemAPI';
-import ItemList from './home/ItemList';
+import * as BookAPI from '../api/BookAPI';
+import BookList from './home/BookList';
 
 
 class App extends React.Component{
@@ -10,96 +10,85 @@ class App extends React.Component{
     super(props);
 
       this.state = {
-        items : [],
-        sort  : false,
-        initialCount:0,
-        pageNumber:1,
-        searchTerm : '',
-
-        loading:true
+        books : [],
+        totalBooks:0,
+        startIndex:0,
+        maxResults :10,
+        loading:false,
+        firstLoad : true
       };
+
+      this.handleSearch = this.handleSearch.bind(this)
     }
 
     handleSearch(searchTerm){
+      if(this.state.searchTerm != searchTerm){
+        this.setState({searchTerm})
+        this.handleBookFetch(searchTerm);
+      }
 
-      this.setState({searchTerm})
 
+    }
+
+    handleBookFetch(searchTerm=this.state.searchTerm,startIndex=this.state.startIndex,maxResults=this.state.maxResults){
+      this.setState({loading:true})
+      axios.get(`https://www.googleapis.com/books/v1/volumes?q=${searchTerm}&startIndex=${startIndex}&maxResults=${maxResults}`).then((res)=>{
+
+        if (res.data.totalItems === 0){
+          this.setState({
+
+            books:[],
+            loading :false,
+            totalBooks : res.data.totalItems,
+            firstLoad : false
+          })
+        }else{
+          this.setState({
+            books:[...res.data.items],
+            loading :false,
+            totalBooks : res.data.totalItems,
+            firstLoad : false
+          })
+        }
+
+      })
     }
 
     handleSort(){
         this.setState({sort : !this.state.sort})
     }
 
-    handleLoadMore(){
-      if (this.state.loading === false){
-        this.setState({loading:true});
-        var pageNumber = this.state.pageNumber+1;
-
-        var URI = `http://api.dataweave.com/v1/priceintelligence_api_test/fetchBundlesAll/?api_key=8034178a60ee3eb70d8d5ab27a561485&bundle=all&per_page=20&page=${pageNumber}&more=1`
-        axios.get(URI).then((response)=>{
-          var initialData = response.data.data;
-          var itemobject;
-
-          var items = initialData.map((element)=>{
-                for (var i in element ){
-                  return element[i][0];
-                }
-          })
-
-
-          this.setState({
-            items:[
-              ...this.state.items,
-              ...items
-            ],
-            loading :false,
-            pageNumber
-
-
-          })
-
-        })
-
-      }
-
+    setFirstLoad(){
+      this.setState({firstLoad:false});
     }
 
 
   render(){
-    var {items, searchTerm, sort } = this.state;
+    var {books, searchTerm, loading, firstLoad } = this.state;
 
-    var count = this.state.initialCount - items.length;
-    var filteredItems = ItemAPI.filteredItems(items, searchTerm, sort);
+  var LoadOrNot = ()=>{
+    if (loading === true){
+      return (<div> Please wait we are loading books you searched for :) </div>);
+    }else{
+      return(
+          <BookList books = {books} firstLoad = {firstLoad} setFirstLoad = {this.setFirstLoad}></BookList>
+      );
+    }
+  }
+
     return(
       <div className = "container">
-        <Search onSort= {this.handleSort.bind(this)} onSearch= {this.handleSearch.bind(this)} initialCount ={this.state.initialCount}  />
+        <Search  onSearch= {this.handleSearch}   />
         <br></br>
-        <ItemList items = {filteredItems} onLoadMore = {this.handleLoadMore.bind(this)} count ={count}  />
+        <div>
+          {LoadOrNot()}
+        </div>  
       </div>
     );
+
   }
 
-  componentDidMount(){
-    const URI = "http://api.dataweave.com/v1/priceintelligence_api_test/fetchBundlesAll/?api_key=8034178a60ee3eb70d8d5ab27a561485&bundle=all&per_page=20&page=1&more=1"
-    axios.get(URI).then((response)=>{
-      var initialData = response.data.data;
-      var itemobject;
-      var items = initialData.map((element)=>{
-            for (var i in element ){
-              return element[i][0];
-            }
-      })
-      if (items.length>0){
-        this.setState({
-          initialCount: response.data.count,
-          loading : false,
-          items
-        })
 
-      }
-
-    })
-  }
 }
 
 

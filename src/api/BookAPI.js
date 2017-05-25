@@ -2,7 +2,7 @@ import _ from 'underscore';
 
 
 export var filteredItems= (items=[],searchTerm,sort)=>{
-  
+
   var filteredItems = items;
   filteredItems = filteredItems.filter((item)=>{
       var text = item.title.toLowerCase();
@@ -21,6 +21,8 @@ export var filteredItems= (items=[],searchTerm,sort)=>{
 
        }
       );
+
+
     }
 
   return filteredItems;
