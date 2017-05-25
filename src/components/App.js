@@ -15,7 +15,8 @@ class App extends React.Component{
         startIndex:0,
         maxResults :10,
         loading:false,
-        firstLoad : true
+        firstLoad : true,
+        errorMessage : ""
       };
 
       this.handleSearch = this.handleSearch.bind(this)
@@ -40,17 +41,28 @@ class App extends React.Component{
             books:[],
             loading :false,
             totalBooks : res.data.totalItems,
-            firstLoad : false
+            firstLoad : false,
+            errorMessage : ""
           })
         }else{
           this.setState({
             books:[...res.data.items],
             loading :false,
             totalBooks : res.data.totalItems,
-            firstLoad : false
+            firstLoad : false,
+            errorMessage : ""
           })
         }
 
+      }).catch((error)=>{
+        debugger;
+        this.setState({
+          books : [],
+          errorMessage : error.message,
+          loading : false,
+          totalBooks : 0,
+          firstLoad : false
+        })
       })
     }
 
@@ -64,14 +76,14 @@ class App extends React.Component{
 
 
   render(){
-    var {books, searchTerm, loading, firstLoad } = this.state;
+    var {books, searchTerm, loading, firstLoad, errorMessage } = this.state;
 
   var LoadOrNot = ()=>{
     if (loading === true){
       return (<div> Please wait we are loading books you searched for :) </div>);
     }else{
       return(
-          <BookList books = {books} firstLoad = {firstLoad} setFirstLoad = {this.setFirstLoad}></BookList>
+          <BookList books = {books} firstLoad = {firstLoad} setFirstLoad = {this.setFirstLoad} errorMessage = {errorMessage}></BookList>
       );
     }
   }
@@ -82,7 +94,7 @@ class App extends React.Component{
         <br></br>
         <div>
           {LoadOrNot()}
-        </div>  
+        </div>
       </div>
     );
 

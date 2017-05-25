@@ -29,8 +29,9 @@ import axios from 'axios';
          })
        )
       }
-
-        if (this.props.books.length === 0 && this.props.firstLoad){
+        if(this.props.errorMessage.length > 0 ){
+          return <div> {this.props.errorMessage }</div>
+        }else if (this.props.books.length === 0 && this.props.firstLoad){
           return (<div>Please fill something in the Search bar so that we can help you to see some books of your choice</div>)
         }else if (this.props.books.length === 0 ) {
           return(<div>We are really sorry , but the book you are looking for is not present</div>);
