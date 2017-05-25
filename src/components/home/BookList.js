@@ -2,18 +2,25 @@ import React,{PropTypes} from 'react';
 
 import axios from 'axios';
 
+import {Pagination} from 'react-bootstrap';
+
 
 
   class BookList extends React.Component{
 
-    setFirstLoad(){
-      if (this.props.firstLoad){
-        this.props.setFirstLoad();
-      }
-
+    handleChange(){
+      debugger;
+      this.props.onChange(Number(this.refs.per_page.value));
     }
-    render(){
 
+    handleChangePage(page){
+      var startIndex = (page-1)*this.props.per_page;
+      this.props.onChangePage(startIndex,page);
+    }
+
+    render(){
+      var {page,per_page, totalBooks} = this.props;
+      const pages = Math.ceil(totalBooks / per_page);
       const bookArr = ()=>{
         return(
           this.props.books.map((book)=>{
@@ -51,6 +58,13 @@ import axios from 'axios';
                   {bookArr()}
                   </tbody>
               </table>
+              <select ref = "per_page" onChange = {this.handleChange.bind(this)} value = {per_page}>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+              </select>
+              <Pagination className="users-pagination pull-right" bsSize="medium" maxButtons={10} first last next prev boundaryLinks items={pages} activePage={page} onSelect={this.handleChangePage.bind(this)} />
             </div>
           );
 

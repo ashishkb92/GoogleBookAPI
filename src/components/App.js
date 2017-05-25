@@ -16,19 +16,36 @@ class App extends React.Component{
         maxResults :10,
         loading:false,
         firstLoad : true,
-        errorMessage : ""
+        errorMessage : "",
+        page : 1
       };
 
       this.handleSearch = this.handleSearch.bind(this)
     }
 
-    handleSearch(searchTerm){
+    handleSearch(searchTerm,startIndex,maxResults,page){
+      debugger;
       if(this.state.searchTerm != searchTerm){
-        this.setState({searchTerm})
-        this.handleBookFetch(searchTerm);
+        this.setState({
+          searchTerm,
+          startIndex,
+          maxResults,
+          page
+        })
+        this.handleBookFetch(searchTerm,startIndex,maxResults);
       }
 
 
+    }
+
+    handleChange(maxResults){
+      this.setState({maxResults});
+      this.handleBookFetch(undefined,undefined,maxResults);
+    }
+
+    handleChangePage(startIndex,page){
+      this.setState({startIndex,page});
+      this.handleBookFetch(undefined,startIndex,undefined)
     }
 
     handleBookFetch(searchTerm=this.state.searchTerm,startIndex=this.state.startIndex,maxResults=this.state.maxResults){
@@ -66,24 +83,18 @@ class App extends React.Component{
       })
     }
 
-    handleSort(){
-        this.setState({sort : !this.state.sort})
-    }
 
-    setFirstLoad(){
-      this.setState({firstLoad:false});
-    }
 
 
   render(){
-    var {books, searchTerm, loading, firstLoad, errorMessage } = this.state;
+    var {books, searchTerm, loading, firstLoad, errorMessage ,maxResults, page, totalBooks } = this.state;
 
   var LoadOrNot = ()=>{
     if (loading === true){
       return (<div> Please wait we are loading books you searched for :) </div>);
     }else{
       return(
-          <BookList books = {books} firstLoad = {firstLoad} setFirstLoad = {this.setFirstLoad} errorMessage = {errorMessage}></BookList>
+          <BookList books = {books} firstLoad = {firstLoad}  errorMessage = {errorMessage} page = {page} per_page = {maxResults} totalBooks = {totalBooks} onChange = {this.handleChange.bind(this)} onChangePage = {this.handleChangePage.bind(this)}></BookList>
       );
     }
   }

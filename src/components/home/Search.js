@@ -5,7 +5,7 @@ class Search extends React.Component {
 
   handleSearch(e){
     e.preventDefault();
-    this.props.onSearch(this.refs.seachTerm.value);
+    this.props.onSearch(this.refs.seachTerm.value,0,10,1);
     debugger;
   }
 
