@@ -25,7 +25,6 @@ class App extends React.Component{
 
     handleSearch(searchTerm,startIndex,maxResults,page){
       debugger;
-      if(this.state.searchTerm != searchTerm){
         this.setState({
           searchTerm,
           startIndex,
@@ -33,7 +32,7 @@ class App extends React.Component{
           page
         })
         this.handleBookFetch(searchTerm,startIndex,maxResults);
-      }
+
 
 
     }
@@ -46,6 +45,12 @@ class App extends React.Component{
     handleChangePage(startIndex,page){
       this.setState({startIndex,page});
       this.handleBookFetch(undefined,startIndex,undefined)
+    }
+
+    handleSort(orderBy,sortBy){
+      debugger;
+      let books = BookAPI.filteredBooks(this.state.books,orderBy,sortBy);
+      this.setState({books})
     }
 
     handleBookFetch(searchTerm=this.state.searchTerm,startIndex=this.state.startIndex,maxResults=this.state.maxResults){
@@ -73,13 +78,24 @@ class App extends React.Component{
 
       }).catch((error)=>{
         debugger;
-        this.setState({
-          books : [],
-          errorMessage : error.message,
-          loading : false,
-          totalBooks : 0,
-          firstLoad : false
-        })
+        if(error.response === undefined){
+          this.setState({
+            books : [],
+            errorMessage : error.message,
+            loading : false,
+            totalBooks : 0,
+            firstLoad : false
+          });
+        }else{
+          this.setState({
+            books : [],
+            errorMessage : error.response.data.error.message,
+            loading : false,
+            totalBooks : 0,
+            firstLoad : false
+          })
+        }
+
       })
     }
 
@@ -94,7 +110,7 @@ class App extends React.Component{
       return (<div> Please wait we are loading books you searched for :) </div>);
     }else{
       return(
-          <BookList books = {books} firstLoad = {firstLoad}  errorMessage = {errorMessage} page = {page} per_page = {maxResults} totalBooks = {totalBooks} onChange = {this.handleChange.bind(this)} onChangePage = {this.handleChangePage.bind(this)}></BookList>
+          <BookList books = {books} firstLoad = {firstLoad}  errorMessage = {errorMessage} page = {page} per_page = {maxResults} totalBooks = {totalBooks} onChange = {this.handleChange.bind(this)} onSort= {this.handleSort.bind(this)} onChangePage = {this.handleChangePage.bind(this)}></BookList>
       );
     }
   }

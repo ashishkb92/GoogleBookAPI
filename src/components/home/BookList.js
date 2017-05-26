@@ -8,6 +8,13 @@ import {Pagination} from 'react-bootstrap';
 
   class BookList extends React.Component{
 
+    constructor(props){
+      super(props);
+      this.state={
+        sortBy : "desc"
+      }
+    }
+
     handleChange(){
       debugger;
       this.props.onChange(Number(this.refs.per_page.value));
@@ -16,6 +23,17 @@ import {Pagination} from 'react-bootstrap';
     handleChangePage(page){
       var startIndex = (page-1)*this.props.per_page;
       this.props.onChangePage(startIndex,page);
+    }
+
+    handleSort(orderBy){
+      if (this.state.sortBy === "asc"){
+        this.setState({sortBy : "desc"})
+      }else {
+        this.setState({sortBy : "asc"})
+      }
+
+
+      this.props.onSort(orderBy, this.state.sortBy );
     }
 
     render(){
@@ -48,10 +66,10 @@ import {Pagination} from 'react-bootstrap';
               <table className="table table-striped table-hover">
                   <thead>
                   <tr>
-                      <th>Title</th>
-                      <th>Subtitle</th>
-                      <th>Authors</th>
-                      <th>Publication Date</th>
+                      <th onClick = {this.handleSort.bind(this,"title")} >Title</th>
+                      <th onClick = {this.handleSort.bind(this,"subtitle")} >Subtitle</th>
+                      <th onClick = {this.handleSort.bind(this,"authors")} >Authors</th>
+                      <th onClick = {this.handleSort.bind(this,"publishedDate")} >Publication Date</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -64,7 +82,7 @@ import {Pagination} from 'react-bootstrap';
                 <option value="30">30</option>
                 <option value="40">40</option>
               </select>
-              <Pagination className="users-pagination pull-right" bsSize="medium" maxButtons={10} first last next prev boundaryLinks items={pages} activePage={page} onSelect={this.handleChangePage.bind(this)} />
+              <Pagination className="users-pagination pull-right" bsSize="medium" maxButtons={10}  next prev  items={pages} activePage={page} onSelect={this.handleChangePage.bind(this)} />
             </div>
           );
 
