@@ -63,7 +63,7 @@ import {Pagination} from 'react-bootstrap';
         }else{
           return(
             <div>
-              <table className="table table-striped table-hover">
+              <table className="table table-responsive table-bordered table-hover">
                   <thead>
                   <tr>
                       <th onClick = {this.handleSort.bind(this,"title")} >Title</th>
