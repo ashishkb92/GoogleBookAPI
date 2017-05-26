@@ -3,18 +3,20 @@ import {Link} from 'react-router';
 
 class Search extends React.Component {
 
+  constructor(props){
+    super(props);
+    this.handleSearch = this.handleSearch.bind(this);
+  }
+
   handleSearch(e){
     e.preventDefault();
     this.props.onSearch(this.refs.seachTerm.value,0,10,1);
-    debugger;
   }
 
-
-
   render(){
-    var searchPlaceHolder = `Which book will you like to search today ?`
+    let searchPlaceHolder = `Which book will you like to search today ?`;
     return(
-      <form onSubmit= {this.handleSearch.bind(this)}>
+      <form onSubmit= {(e)=>this.handleSearch(e)}>
         <div className = "jumbotron" >
             <div className="input-group">
               <input className="form-control" ref ="seachTerm" placeholder={searchPlaceHolder} required  />
@@ -30,5 +32,9 @@ class Search extends React.Component {
     );
   }
 }
+
+Search.propTypes={
+  onSearch : React.PropTypes.func.isRequired
+};
 
 export default Search;
