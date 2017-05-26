@@ -21,7 +21,7 @@ class BookDetail extends React.Component{
          <br/>
          <p>Publishers : {book.volumeInfo.publisher},</p>
          <p>Date of Publication : {` ${book.volumeInfo.publishedDate}`}</p>
-         <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} width="204" height="106" className= "img-responsive" style = {{float :"left" , margin:"20px"}} />
+         <img src={(typeof book.volumeInfo.imageLinks === "undefined")?"":book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} width="204" height="106" className= "img-responsive" style = {{float :"left" , margin:"20px"}} />
          <p>{book.volumeInfo.description}</p>
          <p style = {{clear:"both"}}></p>
         </div>
