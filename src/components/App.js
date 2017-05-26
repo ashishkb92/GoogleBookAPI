@@ -3,6 +3,8 @@ import Search from './home/Search';
 import axios from 'axios';
 import * as BookAPI from '../api/BookAPI';
 import BookList from './home/BookList';
+import {browserHistory} from 'react-router';
+import BookDetail from './detail/BookDetail'
 
 
 class App extends React.Component{
@@ -17,7 +19,9 @@ class App extends React.Component{
         loading:false,
         firstLoad : true,
         errorMessage : "",
-        page : 1
+        page : 1,
+        bookClicked : {},
+        bookDetails : false
       };
 
       this.handleSearch = this.handleSearch.bind(this)
@@ -51,6 +55,21 @@ class App extends React.Component{
       debugger;
       let books = BookAPI.filteredBooks(this.state.books,orderBy,sortBy);
       this.setState({books})
+    }
+
+    handleClickBook(book){
+      this.setState({
+        bookClicked:book,
+        bookDetails : true
+      });
+
+    }
+
+    handleGoBack(){
+      this.setState({
+        bookClicked : {},
+        bookDetails : false
+      })
     }
 
     handleBookFetch(searchTerm=this.state.searchTerm,startIndex=this.state.startIndex,maxResults=this.state.maxResults){
@@ -103,27 +122,38 @@ class App extends React.Component{
 
 
   render(){
-    var {books, searchTerm, loading, firstLoad, errorMessage ,maxResults, page, totalBooks } = this.state;
+    var {books, searchTerm, loading, firstLoad, errorMessage ,maxResults, page, totalBooks,bookDetails,bookClicked } = this.state;
 
   var LoadOrNot = ()=>{
     if (loading === true){
       return (<div> Please wait we are loading books you searched for :) </div>);
     }else{
       return(
-          <BookList books = {books} firstLoad = {firstLoad}  errorMessage = {errorMessage} page = {page} per_page = {maxResults} totalBooks = {totalBooks} onChange = {this.handleChange.bind(this)} onSort= {this.handleSort.bind(this)} onChangePage = {this.handleChangePage.bind(this)}></BookList>
+          <BookList books = {books} firstLoad = {firstLoad}  errorMessage = {errorMessage} page = {page} per_page = {maxResults} totalBooks = {totalBooks} onChange = {this.handleChange.bind(this)} onSort= {this.handleSort.bind(this)} onChangePage = {this.handleChangePage.bind(this)} onClickBook = {this.handleClickBook.bind(this)}></BookList>
       );
     }
   }
-
-    return(
-      <div className = "container">
-        <Search  onSearch= {this.handleSearch}   />
-        <br></br>
-        <div>
-          {LoadOrNot()}
+    if (bookDetails===true){
+      return(
+        <div className="container">
+          <BookDetail book = {bookClicked} onGoBack = {this.handleGoBack.bind(this)}></BookDetail>
         </div>
-      </div>
+
     );
+    }else{
+      return(
+        <div className = "container">
+          <Search  onSearch= {this.handleSearch}   />
+          <br></br>
+          <div>
+            {LoadOrNot()}
+          </div>
+
+        </div>
+      );
+    }
+
+
 
   }
 

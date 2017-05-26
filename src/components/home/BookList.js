@@ -36,6 +36,10 @@ import {Pagination} from 'react-bootstrap';
       this.props.onSort(orderBy, this.state.sortBy );
     }
 
+    handleClickBook(book){
+      this.props.onClickBook(book);
+    }
+
     render(){
       var {page,per_page, totalBooks} = this.props;
       const pages = Math.ceil(totalBooks / per_page);
@@ -43,7 +47,7 @@ import {Pagination} from 'react-bootstrap';
         return(
           this.props.books.map((book)=>{
              return (
-                <tr key = {book.id}  >
+                <tr key = {book.id}  onClick = {this.handleClickBook.bind(this,book)}>
                   <td>{book.volumeInfo.title}</td>
                   <td>{book.volumeInfo.subtitle}</td>
                   <td>{(typeof book.volumeInfo.authors === "undefined") ? " " : book.volumeInfo.authors.join(", ")}</td>
